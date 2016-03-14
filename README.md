@@ -16,7 +16,8 @@ Currently the following are supported:
   You can for instance set a title for your API by calling:
   ```clj
   (swaggerize [...]
-    :base {:info {:title \"My asewome API\"}})```
+    :base {:info {:title \"My asewome API\"}})
+  ```
 
 - `:path-info` - A function that gets each route handler as its argument.
   Its result is merged with the operation object.
