@@ -27,6 +27,8 @@ Currently the following are supported:
                       :swagger {:description "Get user by ID"}}]]
   ```
 
+There is also a function called `swaggerize-json`, which is the same as `swaggerize`, but returns a JSON string.
+
 ## License
 
 Copyright © 2016 Functional Bytes
