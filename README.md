@@ -1,6 +1,6 @@
 # sibiro-swagger
 
-Generate a [swagger-ui](https://github.com/swagger-api/swagger-ui) or [swagger-codegen](https://github.com/swagger-api/swagger-codegen) specification.
+Generate a [swagger](http://swagger.io) specification for your [sibiro](https://github.com/aroemers/sibiro) routes.
 It generates a specification according to [OpenAPI specification 2.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md).
 
 ## Usage
