@@ -45,7 +45,7 @@
   argument. Its result is merged with the operation object. Default is
   (fn [h] (when (map? h) (:swagger h)))."
   [routes & {:keys [base path-info]
-             :or (path-info (fn [h] (when (map? h) (:swagger h))))}]
+             :or {path-info (fn [h] (when (map? h) (:swagger h)))}}]
   (merge-with merge {:swagger "2.0"
                      :info {:title "I'm too lazy to name my API"
                             :version "0.1-SNAPSHOT"}
