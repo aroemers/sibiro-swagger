@@ -46,12 +46,11 @@
   (fn [h] (when (map? h) (:swagger h)))."
   [routes & {:keys [base path-info]
              :or (path-info (fn [h] (when (map? h) (:swagger h))))}]
-  (merge base-spec
-         (merge-with merge {:swagger "2.0"
-                            :info {:title "I'm too lazy to name my API"
-                                   :version "0.1-SNAPSHOT"}
-                            :paths (paths routes path-info)}
-                     base)))
+  (merge-with merge {:swagger "2.0"
+                     :info {:title "I'm too lazy to name my API"
+                            :version "0.1-SNAPSHOT"}
+                     :paths (paths routes path-info)}
+              base))
 
 (defn swaggerize-json
   "Same as `swaggerize`, but generates a JSON string."
