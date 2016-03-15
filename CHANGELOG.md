@@ -7,10 +7,6 @@
 - Use a deep merge for the `:base` and `:route-info` options.
 
 
-### Changed
-- Add a new arity to `make-widget-async` to provide a different widget shape.
-
-
 ## [0.1.1] - 2016-03-14
 ### Fixed
 - Fix :or expression in `swaggerize`.
