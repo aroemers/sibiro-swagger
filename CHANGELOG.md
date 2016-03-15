@@ -2,7 +2,7 @@
 
 
 ## [Unreleased]
-## Changed
+### Changed
 - Renamed `:path-info` option to `:route-info`.
 - Use a deep merge for the `:base` and `:route-info` options.
 
