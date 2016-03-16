@@ -80,7 +80,7 @@ _As always, have fun!_
 
 Patches and ideas welcome.
 
-[![Circle CI](https://circleci.com/gh/aroemers/sibiro-swagger/tree/master.svg?style=svg)](https://circleci.com/gh/aroemers/sibiro-swagger/tree/master)
+Master branch: [![Circle CI](https://circleci.com/gh/aroemers/sibiro-swagger/tree/master.svg?style=svg)](https://circleci.com/gh/aroemers/sibiro-swagger/tree/master)
 
 ## License
 
