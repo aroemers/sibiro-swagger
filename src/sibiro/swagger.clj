@@ -6,7 +6,7 @@
 ;;; Helper functions.
 
 (defn- deep-merge [& ms]
-  (if (every? map? ms)
+  (if (every? #(or (map? %) (nil? %)) ms)
     (apply merge-with deep-merge ms)
     (last ms)))
 
@@ -16,15 +16,22 @@
 (defn- parameters [params]
   (for [param params]
     {:name param
-     :in "path"
-     :type "string"}))
+     :in :path
+     :type :string}))
+
+(defn- clean-uri [uri]
+  (let [;; remove regexes
+        cleaned (str/replace uri #"\{.+?\}" "")
+        ;; ensure slash at beginning
+        cleaned (cond->> cleaned (not= (first cleaned) \/) (str \/))]
+    cleaned))
 
 (defn- path [uri]
-  (let [no-regexes (str/replace uri #"\{.+?\}" "")
+  (let [cleaned (clean-uri uri)
         params-re  #"/(?::(.+?)|\*)(?=/|$)"
-        params     (->> (re-seq params-re no-regexes)
+        params     (->> (re-seq params-re cleaned)
                         (map (fn [[_ p]] (if p (keyword p) :*))))]
-    [(str/replace no-regexes params-re (fn [[_ p]] (str "/{" (or p "*") "}")))
+    [(str/replace cleaned params-re (fn [[_ p]] (str "/{" (or p "*") "}")))
      params]))
 
 (defn- paths [routes route-info]

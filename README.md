@@ -76,6 +76,12 @@ And lastly, the following function returns the swagger specification for the rou
 
 _As always, have fun!_
 
+## Contributing
+
+Patches and ideas welcome.
+
+[![Circle CI](https://circleci.com/gh/aroemers/sibiro-swagger/tree/master.svg?style=svg)](https://circleci.com/gh/aroemers/sibiro-swagger/tree/master)
+
 ## License
 
 Copyright © 2016 Functional Bytes
