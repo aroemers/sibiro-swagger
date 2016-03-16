@@ -5,7 +5,7 @@ It generates a specification according to [OpenAPI specification 2.0](https://gi
 
 ## Usage
 
-Add `[functionalbytes/sibiro-swagger "0.1.2"]` to your dependencies.
+Add `[functionalbytes/sibiro-swagger "0.1.3"]` to your dependencies.
 
 The library offers basically one function: `swaggerize`.
 It takes your (uncompiled) routes datastructure, and returns a Clojure datastructure holding the specification.
