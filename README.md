@@ -26,10 +26,6 @@ Currently the following are supported:
   [[:get "/user/:id" {:handler get-user
                       :swagger {:description "Get user by ID"}}]]
   ```
-  
-- `:operation-param-refs` - Some versions of Swagger UI don't display parameters when not specified at the operation level (even though the should when they are specified at the path level). 
-  Other versions display duplicate parameters when specified at both the operation and path level (even though one should override the other, [issue 1913](https://github.com/swagger-api/swagger-ui/issues/1913)). 
-  Settings this option to true will add a parameters list to every operation that has no parameters specified in the route info, by refering to the path level parameters.
 
 There are also two functions called `swaggerize-json` and `swaggerize-yaml`, which is the same as `swaggerize`, but returns a JSON or YAML string.
 
@@ -44,9 +40,7 @@ Let's have two simple routes, one with some extra route info:
                                            :responses {200 {:description "User found"}}}}]
              [:post "/user/:id" nil])
 
-(swaggerize-yaml routes 
-  :base {:info {:version "0.3"}}
-  :operation-param-refs true)
+(swaggerize-yaml routes :base {:info {:version "0.3"}})
 ```
 
 Above results in the following YAML. Note that some defaults are still visibile, such as the title and the responses of the POST operation.
@@ -72,8 +66,6 @@ paths:
       responses:
         default:
           description: Default response.
-      parameters:
-      - $ref: '#/paths/~1user~1{id}/parameters/0'
     parameters:
     - name: id
       in: path
