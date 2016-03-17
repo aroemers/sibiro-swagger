@@ -2,7 +2,8 @@
 
 
 ## [Unreleased]
-- No changes yet
+### Added
+- Add `swaggerize-yaml`.
 
 
 ## [0.1.3] - 2016-03-16

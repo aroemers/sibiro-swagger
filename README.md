@@ -27,7 +27,7 @@ Currently the following are supported:
                       :swagger {:description "Get user by ID"}}]]
   ```
 
-There is also a function called `swaggerize-json`, which is the same as `swaggerize`, but returns a JSON string.
+There are also two functions called `swaggerize-json` and `swaggerize-yaml`, which is the same as `swaggerize`, but returns a JSON or YAML string.
 
 ## Example with external swagger path info
 

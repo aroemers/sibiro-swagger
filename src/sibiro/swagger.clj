@@ -1,7 +1,8 @@
 (ns sibiro.swagger
   "Transform routes to a Swagger 2.0 spec."
   (:require [cheshire.core :as json]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [yaml.writer :as yaml]))
 
 ;;; Helper functions.
 
@@ -78,3 +79,8 @@
   "Same as `swaggerize`, but generates a JSON string."
   [routes & opts]
   (json/generate-string (apply swaggerize routes opts)))
+
+(defn swaggerize-yaml
+  "Same as `swaggerize`, but generates a YAML string."
+  [routes & opts]
+  (yaml/generate-string (apply swaggerize routes opts) :dumper-options {:flow-style :block}))
