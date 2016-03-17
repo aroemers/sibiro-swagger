@@ -28,10 +28,10 @@ Currently the following are supported:
   ```
 
 - `:param-level` - A keyword indicating where the default parameters should be placed.
-  If set to :path, the parameters are defined on the path level.
-  If set to :operation, the parameters are defined on the operation level.
-  If set to :both, the parameters are defined on the path level, and at the operation level those are referenced.
-  Default is :path.
+  If set to `:path`, the parameters are defined on the path level.
+  If set to `:operation`, the parameters are defined on the operation level.
+  If set to `:both`, the parameters are defined on the path level, and at the operation level those are referenced.
+  Default is `:path`.
 
   This option is mainly for circumventing that some Swagger UI versions need parameters on the operation level, and other versions don't get the overriding of parameters right.
 
