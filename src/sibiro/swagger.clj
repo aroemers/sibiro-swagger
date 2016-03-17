@@ -15,11 +15,10 @@
 ;;; Swagger implementation.
 
 (def ^:private default-response
-  {:responses
-   {:default
-    {:description "Default response."}}})
+  {:default
+   {:description "Default response."}})
 
-(defn- parameters [params]
+(defn- swagger-parameters [params]
   (for [param params]
     {:name param
      :in :path
@@ -33,7 +32,7 @@
         cleaned (cond->> cleaned (not= (first cleaned) \/) (str \/))]
     cleaned))
 
-(defn- path [uri]
+(defn- swagger-path [uri]
   (let [cleaned (clean-uri uri)
         params-re  #"/(?::(.+?)|\*)(?=/|$)"
         params     (->> (re-seq params-re cleaned)
@@ -41,30 +40,38 @@
     [(str/replace cleaned params-re (fn [[_ p]] (str "/{" (or p "*") "}")))
      params]))
 
-(defn- paths [routes route-info]
-  (loop [routes        routes
-         swagger-paths {}]
+(defn- swagger-paths [routes route-info param-level]
+  (loop [routes routes
+         paths  {}]
     (if-let [[method uri handler] (first routes)]
-      (let [[swagger-path params]  (path uri)
-            swagger-parameters     (or (get-in swagger-paths [swagger-path :parameters])
-                                       (parameters params))
-            swagger-operation-info (if-let [inf (route-info handler)]
-                                     (cond->> inf
-                                       (not (:responses inf))
-                                       (deep-merge default-response))
-                                     default-response)]
+      (let [[path params]  (swagger-path uri)
+            path-params    (or (get-in paths [path :parameters])
+                               (swagger-parameters params))
+            param-refs     (when (= param-level :both)
+                             (let [path-ref (str/replace path "/" "~1")]
+                               (for [i (range (count path-params))]
+                                 {"$ref" (str "#/paths/" path-ref "/parameters/" i)})))
+            info           (route-info handler)
+            responses      (or (:responses info) default-response)
+            operation-info (deep-merge {:responses responses}
+                                       (cond (= param-level :operation) {:parameters path-params}
+                                             (= param-level :both)      {:parameters param-refs}
+                                             :otherwise                 nil)
+                                       info)]
         (if (= method :any)
           (recur (rest routes)
-                 (reduce (fn [sps mth]
-                           (-> sps
-                               (update swagger-path assoc mth swagger-operation-info)
-                               (update swagger-path assoc :parameters swagger-parameters)))
-                         swagger-paths [:get :put :post :delete :options :head :patch]))
+                 (reduce (fn [ps mth]
+                           (-> ps
+                               (update path assoc mth operation-info)
+                               (cond-> (#{:path :both} param-level)
+                                 (update path assoc :parameters path-params))))
+                         paths [:get :put :post :delete :options :head :patch]))
           (recur (rest routes)
-                 (-> swagger-paths
-                     (update swagger-path assoc method swagger-operation-info)
-                     (update swagger-path assoc :parameters swagger-parameters)))))
-      swagger-paths)))
+                 (-> paths
+                     (update path assoc method operation-info)
+                     (cond-> (#{:path :both} param-level)
+                       (update path assoc :parameters path-params))))))
+      paths)))
 
 (defn swaggerize
   "Generate a Clojure map holding a Swagger specification based on the
@@ -76,13 +83,23 @@
 
   :route-info - A function that gets each route handler as its
   argument. Its result is merged with the operation object. Default is
-  (fn [h] (when (map? h) (:swagger h)))."
-  [routes & {:keys [base route-info]
-             :or {route-info (fn [h] (when (map? h) (:swagger h)))}}]
+  (fn [h] (when (map? h) (:swagger h))).
+
+  :param-level - A keyword indicating where the default parameters
+  should be placed. If set to :path, the parameters are defined on the
+  path level. If set to :operation, the parameters are defined on the
+  operation level. If set to :both, the parameters are defined on the
+  path level, and at the operation level those are referenced. Default
+  is :path. This option is mainly for circumventing that some Swagger
+  UI versions need parameters on the operation level, and other
+  versions don't get the overriding of parameters right."
+  [routes & {:keys [base route-info param-level]
+             :or {route-info (fn [h] (when (map? h) (:swagger h)))
+                  param-level :path}}]
   (deep-merge {:swagger "2.0"
                :info {:title "I'm too lazy to name my API"
                       :version "0.1-SNAPSHOT"}
-               :paths (paths routes route-info)}
+               :paths (swagger-paths routes route-info param-level)}
               base))
 
 (defn swaggerize-json

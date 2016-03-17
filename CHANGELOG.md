@@ -2,6 +2,8 @@
 
 
 ## [Unreleased]
+### Added
+- Add `:param-level` option.
 
 
 ## [0.1.4] - 2016-03-17

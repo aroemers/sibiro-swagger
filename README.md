@@ -27,6 +27,14 @@ Currently the following are supported:
                       :swagger {:description "Get user by ID"}}]]
   ```
 
+- `:param-level` - A keyword indicating where the default parameters should be placed.
+  If set to :path, the parameters are defined on the path level.
+  If set to :operation, the parameters are defined on the operation level.
+  If set to :both, the parameters are defined on the path level, and at the operation level those are referenced.
+  Default is :path.
+
+  This option is mainly for circumventing that some Swagger UI versions need parameters on the operation level, and other versions don't get the overriding of parameters right.
+
 There are also two functions called `swaggerize-json` and `swaggerize-yaml`, which is the same as `swaggerize`, but returns a JSON or YAML string.
 
 ### An example
@@ -34,8 +42,8 @@ There are also two functions called `swaggerize-json` and `swaggerize-yaml`, whi
 Let's have two simple routes, one with some extra route info:
 
 ```clj
-(def routes [[:get  "/user/:id" {:swagger {:description "Get user by ID" 
-                                           :parameters [{:name :id :type :integer 
+(def routes [[:get  "/user/:id" {:swagger {:description "Get user by ID"
+                                           :parameters [{:name :id :type :integer
                                                          :in :path :required true}]
                                            :responses {200 {:description "User found"}}}}]
              [:post "/user/:id" nil])

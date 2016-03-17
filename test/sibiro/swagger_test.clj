@@ -19,17 +19,17 @@
 (deftest test-parameterized-route
   (testing "basic parameterized route"
     (let [routes #{[:get "/basic/:id/*"]}]
-      (is (= {"/basic/{id}/{*}" (default-operation :get :parameters [{:name :id :type :string
-                                                                      :in :path :required true}
-                                                                     {:name :*  :type :string
-                                                                      :in :path :required true}])}
-            (:paths (swaggerize routes)))))))
+      (is (= {"/basic/{id}/{*}" (default-operation :get :parameters [{:name :id     :in       :path
+                                                                      :type :string :required true}
+                                                                     {:name :*      :in       :path
+                                                                      :type :string :required true}])}
+             (:paths (swaggerize routes)))))))
 
 (deftest test-parameter-at-start
   (testing "parameter at start, without slash"
     (let [routes #{[:get "*"]}]
-      (is (= {"/{*}" (default-operation :get :parameters [{:name :*  :type :string
-                                                           :in :path :required true}])}
+      (is (= {"/{*}" (default-operation :get :parameters [{:name :*      :in       :path
+                                                           :type :string :required true}])}
              (:paths (swaggerize routes)))))))
 
 (deftest test-base
