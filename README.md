@@ -26,7 +26,7 @@ Currently the following are supported:
   [[:get "/user/:id" {:handler get-user
                       :swagger {:description "Get user by ID"}}]]
   ```
-  If you find that this clutters your route definitions, have a look at the more intricate [example](example.md).
+  If you find that this clutters your route definitions, have a look at the more intricate [example](EXAMPLE.md).
 
 - `:param-level` - A keyword indicating where the default parameters should be placed.
   If set to `:path`, the parameters are defined on the path level.
