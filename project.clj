@@ -1,4 +1,4 @@
-(defproject functionalbytes/sibiro-swagger "0.1.3"
+(defproject functionalbytes/sibiro-swagger "0.1.4"
   :description "Create Swagger 2 specification for sibiro routes"
   :url "https://github.com/aroemers/sibiro-swagger"
   :license {:name "Eclipse Public License"

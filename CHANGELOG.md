@@ -2,8 +2,12 @@
 
 
 ## [Unreleased]
+
+
+## [0.1.4] - 2016-03-17
 ### Added
 - Add `swaggerize-yaml`.
+- Default response for each operation.
 
 
 ## [0.1.3] - 2016-03-16
@@ -29,7 +33,8 @@
 ## [0.1.0] - 2016-03-14
 Initial release
 
-[Unreleased]: https://github.com/aroemers/sibiro-swagger/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/aroemers/sibiro-swagger/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/aroemers/sibiro-swagger/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/aroemers/sibiro-swagger/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/aroemers/sibiro-swagger/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/aroemers/sibiro-swagger/compare/v0.1.0...v0.1.1
