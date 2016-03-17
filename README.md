@@ -21,13 +21,65 @@ Currently the following are supported:
 
 - `:route-info` - A function that gets each route handler as its argument.
   Its result is merged with the operation object.
-  The default is `(fn [h] (when (map? h) (:swagger h)))`, so you could define routes like:
+  The default is `(fn [h] (when (map? h) (:swagger h)))`, so you _could_ define routes like:
   ```clj
   [[:get "/user/:id" {:handler get-user
                       :swagger {:description "Get user by ID"}}]]
   ```
+  
+- `:operation-param-refs` - Some versions of Swagger UI don't display parameters when not specified at the operation level (even though the should when they are specified at the path level). 
+  Other versions display duplicate parameters when specified at both the operation and path level (even though one should override the other, [issue 1913](https://github.com/swagger-api/swagger-ui/issues/1913)). 
+  Settings this option to true will add a parameters list to every operation that has no parameters specified in the route info, by refering to the path level parameters.
 
 There are also two functions called `swaggerize-json` and `swaggerize-yaml`, which is the same as `swaggerize`, but returns a JSON or YAML string.
+
+### An example
+
+Let's have two simple routes, one with some extra route info:
+
+```clj
+(def routes [[:get  "/user/:id" {:swagger {:description "Get user by ID" 
+                                           :parameters [{:name :id :type :integer 
+                                                         :in :path :required true}]
+                                           :responses {200 {:description "User found"}}}}]
+             [:post "/user/:id" nil])
+
+(swaggerize-yaml routes 
+  :base {:info {:version "0.3"}}
+  :operation-param-refs true)
+```
+
+Above results in the following YAML. Note that some defaults are still visibile, such as the title and the responses of the POST operation.
+
+```yaml
+swagger: '2.0'
+info:
+  title: I'm too lazy to name my API
+  version: '0.3'
+paths:
+  /user/{id}:
+    get:
+      responses:
+        '200':
+          description: User found
+      parameters:
+      - name: id
+        type: integer
+        in: path
+        required: true
+      description: Get user by ID
+    post:
+      responses:
+        default:
+          description: Default response.
+      parameters:
+      - $ref: '#/paths/~1user~1{id}/parameters/0'
+    parameters:
+    - name: id
+      in: path
+      type: string
+      required: true
+```
 
 ## Example with external swagger path info
 
@@ -59,7 +111,7 @@ Defining a handler that nicely includes the swagger information, can now be done
 ```clj
 (defhandler :user-get
   {:description "Get user by ID"
-   :parameters [{:name :id, :type :integer, :in :path}]}
+   :parameters [{:name :id, :type :integer, :in :path, :required true}]}
   [{{id :id} :route-params}]
   {:status 200
    :body (db/user-by-id id)})
