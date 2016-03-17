@@ -14,11 +14,17 @@
 
 ;;; Swagger implementation.
 
+(def ^:private default-response
+  {:responses
+   {:default
+    {:description "Default response."}}})
+
 (defn- parameters [params]
   (for [param params]
     {:name param
      :in :path
-     :type :string}))
+     :type :string
+     :required true}))
 
 (defn- clean-uri [uri]
   (let [;; remove regexes
@@ -42,7 +48,11 @@
       (let [[swagger-path params]  (path uri)
             swagger-parameters     (or (get-in swagger-paths [swagger-path :parameters])
                                        (parameters params))
-            swagger-operation-info (or (route-info handler) {})]
+            swagger-operation-info (if-let [inf (route-info handler)]
+                                     (cond->> inf
+                                       (not (:responses inf))
+                                       (deep-merge default-response))
+                                     default-response)]
         (if (= method :any)
           (recur (rest routes)
                  (reduce (fn [sps mth]
