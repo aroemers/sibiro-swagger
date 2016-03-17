@@ -5,4 +5,6 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[cheshire "5.5.0"]
                  [io.forward/yaml "1.0.1"]
-                 [org.clojure/clojure "1.8.0"]])
+                 [json-schema "0.1.0-RC1"]
+                 [org.clojure/clojure "1.8.0"]
+                 [webjure/json-schema "0.6"]])

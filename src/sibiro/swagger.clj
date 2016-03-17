@@ -1,7 +1,10 @@
 (ns sibiro.swagger
   "Transform routes to a Swagger 2.0 spec."
   (:require [cheshire.core :as json]
+            [clojure.java.io :as io]
             [clojure.string :as str]
+            [json-schema.core :as sch]
+            [webjure.json-schema.validator :as val]
             [yaml.writer :as yaml]))
 
 ;;; Helper functions.
@@ -13,6 +16,9 @@
 
 
 ;;; Swagger implementation.
+
+(def ^:private schema
+  (json/parse-string (slurp (io/resource "schema.json")) false))
 
 (def ^:private default-response
   {:responses
@@ -76,14 +82,21 @@
 
   :route-info - A function that gets each route handler as its
   argument. Its result is merged with the operation object. Default is
-  (fn [h] (when (map? h) (:swagger h)))."
-  [routes & {:keys [base route-info]
+  (fn [h] (when (map? h) (:swagger h))).
+
+  :skip-validation - When set to true, no validation of the resulting
+  specification will be performed."
+  [routes & {:keys [base route-info skip-validation]
              :or {route-info (fn [h] (when (map? h) (:swagger h)))}}]
-  (deep-merge {:swagger "2.0"
-               :info {:title "I'm too lazy to name my API"
-                      :version "0.1-SNAPSHOT"}
-               :paths (paths routes route-info)}
-              base))
+  (let [spec (deep-merge {:swagger "2.0"
+                            :info {:title "I'm too lazy to name my API"
+                                   :version "0.1-SNAPSHOT"}
+                            :paths (paths routes route-info)}
+                         base)]
+    (when-not skip-validation
+      (when-let [error (val/validate schema spec)]
+        (throw (ex-info "Invalid Swagger 2.0 specification" error))))
+    spec))
 
 (defn swaggerize-json
   "Same as `swaggerize`, but generates a JSON string."
