@@ -12,7 +12,7 @@ It takes your (uncompiled) routes datastructure, and returns a Clojure datastruc
 It also takes additional keyword arguments.
 Currently the following are supported:
 
-- `:base` - A map that is merged in with the generated swagger root object.
+- `:base` - A map that is deep merged in with the generated swagger root object.
   You can for instance set a title for your API by calling:
   ```clj
   (swaggerize [...]
@@ -21,7 +21,7 @@ Currently the following are supported:
 
 - `:route-info` - A function that gets each route handler as its argument.
   Its result is merged with the operation object.
-  The default is `(fn [h] (when (map? h) (:swagger h)))`, so you _could_ define routes like:
+  The default is `#(when (map? %) (:swagger %))`, so you _could_ define routes like:
   ```clj
   [[:get "/user/:id" {:handler get-user
                       :swagger {:description "Get user by ID"}}]]
